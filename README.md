@@ -122,6 +122,22 @@ Access-Control-Allow-Headers: Content-Type, Authorization, PAYMENT-SIGNATURE, X-
 
 The same expose-headers are also present on the 402 response itself.
 
+## Deploy on Vercel
+
+The app doubles as a Vercel serverless function: `api/index.js` re-exports
+the Express app, and `src/server.js` only calls `app.listen` when
+`process.env.VERCEL` is unset. `vercel.json` rewrites every path to the
+function.
+
+1. Import this repository in Vercel (Add New → Project). No build command or
+   output settings are needed beyond the defaults — the presence of
+   `vercel.json` and `api/index.js` is enough.
+2. After the first deploy, note the assigned `*.vercel.app` URL and set the
+   `PUBLIC_BASE_URL` environment variable (Project → Settings → Environment
+   Variables) to that URL, e.g. `https://x402-server.vercel.app`.
+3. Redeploy (Deployments → ⋯ → Redeploy) so the discovery documents pick up
+   the public URL, then re-run the four checks against it.
+
 ## Remaining steps for go-live
 
 1. Deploy `src/server.js` behind a **public HTTPS origin** you control

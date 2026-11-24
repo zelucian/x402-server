@@ -206,10 +206,16 @@ app.get("/.well-known/x402", (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`x402-server listening on http://localhost:${PORT}`);
-  console.log(`  public base URL : ${PUBLIC_BASE_URL}`);
-  console.log(`  protected route : GET /  (${PRICE} USDC on ${NETWORK}, exact)`);
-  console.log(`  payTo           : ${PAYTO_ADDRESS}`);
-  console.log(`  facilitator     : ${FACILITATOR_URL}`);
-});
+// On Vercel the app is imported as a serverless function (see api/index.js),
+// so it must not bind a port there; everywhere else it listens as usual.
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`x402-server listening on http://localhost:${PORT}`);
+    console.log(`  public base URL : ${PUBLIC_BASE_URL}`);
+    console.log(`  protected route : GET /  (${PRICE} USDC on ${NETWORK}, exact)`);
+    console.log(`  payTo           : ${PAYTO_ADDRESS}`);
+    console.log(`  facilitator     : ${FACILITATOR_URL}`);
+  });
+}
+
+export default app;
